@@ -4,12 +4,12 @@ import '../model/drawing_point.dart';
 class FirebaseService {
   final DatabaseReference _db = FirebaseDatabase.instance.ref();
 
-  /// Save a drawing point to Firebase
   Future<void> saveDrawingPoint(DrawingPoint point) async {
-    await _db.child('canvas/${point.id}').set(point.toJson());
+    final jsonData = point.toJson();
+    print(jsonData); // Debug the data
+    await _db.child('canvas/${point.id}').set(jsonData);
   }
 
-  /// Fetch all drawing points from Firebase
   Future<List<DrawingPoint>> fetchDrawingPoints() async {
     final snapshot = await _db.child('canvas').get();
     if (snapshot.exists) {
@@ -22,9 +22,9 @@ class FirebaseService {
     return [];
   }
 
-  /// Listen for real-time updates
   void listenForUpdates(Function(List<DrawingPoint>) onUpdate) {
     _db.child('canvas').onValue.listen((event) {
+      print("Database update received: ${event.snapshot.value}");
       if (event.snapshot.value != null) {
         final data = Map<String, dynamic>.from(event.snapshot.value as Map);
         final points = data.values

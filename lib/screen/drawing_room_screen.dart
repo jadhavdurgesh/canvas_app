@@ -30,12 +30,11 @@ class _DrawingRoomScreenState extends State<DrawingRoomScreen> {
   DrawingPoint? currentDrawingPoint;
   final FirebaseService _firebaseService = FirebaseService();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _initializeDrawingPoints();
-  //   _listenForUpdates();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    _initializeDrawingPoints();
+  }
 
   Future<void> _initializeDrawingPoints() async {
     final points = await _firebaseService.fetchDrawingPoints();

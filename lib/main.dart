@@ -3,13 +3,22 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'screen/drawing_room_screen.dart';
+import 'service/applifeclcyemanager.dart';
+import 'service/notification_services.dart';
+import 'service/websocket_services.dart';
 
-void main() async  {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform
+  await NotificationService.initialize();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  final webSocketService = WebSocketService('http://localhost:3000/');
+  runApp(
+    AppLifecycleManager(
+      webSocketService: webSocketService,
+      child: MyApp(),
+    ),
   );
-  runApp(const MyApp());
+  
 }
 
 class MyApp extends StatelessWidget {
