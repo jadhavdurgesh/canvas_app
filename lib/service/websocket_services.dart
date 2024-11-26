@@ -11,10 +11,8 @@ class WebSocketService {
 
   void listenForNotifications() {
     _channel.stream.listen((event) {
-      // Decode the event message
       final Map<String, dynamic> message = json.decode(event);
 
-      // Show a notification if the app is in the background
       if (message['title'] != null && message['body'] != null) {
         NotificationService.showNotification(message['title'], message['body']);
       }

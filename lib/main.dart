@@ -1,8 +1,10 @@
+import 'package:permission_handler/permission_handler.dart';
 import 'package:canvas_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'screen/drawing_room_screen.dart';
+import 'screen/test.dart';
 import 'service/applifeclcyemanager.dart';
 import 'service/notification_services.dart';
 import 'service/websocket_services.dart';
@@ -10,15 +12,16 @@ import 'service/websocket_services.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NotificationService.initialize();
+  await requestNotificationPermission();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  final webSocketService = WebSocketService('http://localhost:3000/');
+  final webSocketService = WebSocketService('ws://localhost:3000/');
+  webSocketService.listenForNotifications();
   runApp(
     AppLifecycleManager(
       webSocketService: webSocketService,
       child: MyApp(),
     ),
   );
-  
 }
 
 class MyApp extends StatelessWidget {
@@ -36,5 +39,14 @@ class MyApp extends StatelessWidget {
       ),
       home: DrawingRoomScreen(),
     );
+  }
+}
+
+Future<void> requestNotificationPermission() async {
+  PermissionStatus status = await Permission.notification.request();
+  if (status.isGranted) {
+    print('Notification permission granted');
+  } else {
+    print('Notification permission denied');
   }
 }

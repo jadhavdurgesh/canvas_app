@@ -8,19 +8,19 @@ class NotificationService {
   static Future<void> initialize() async {
     const AndroidInitializationSettings androidInit =
         AndroidInitializationSettings('@mipmap/ic_launcher');
-    const DarwinInitializationSettings iosInit = DarwinInitializationSettings();
 
     const InitializationSettings initSettings = InitializationSettings(
       android: androidInit,
-      iOS: iosInit,
     );
 
     await _notifications.initialize(initSettings,
         onDidReceiveNotificationResponse: onSelectNotification);
   }
+  
 
   // Show notification
   static Future<void> showNotification(String title, String body) async {
+    print('Notification: $title - $body');
     const AndroidNotificationDetails androidDetails =
         AndroidNotificationDetails(
       'drawing_notifications',
@@ -34,7 +34,6 @@ class NotificationService {
 
     const NotificationDetails notificationDetails = NotificationDetails(
       android: androidDetails,
-      iOS: iosDetails,
     );
 
     await _notifications.show(
